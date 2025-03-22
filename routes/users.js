@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 let userController = require('../controllers/users')
-let { check_authentication,check_authorization } = require('../utils/check_auth')
 let { CreateSuccessRes } = require('../utils/responseHandler')
 let constants = require('../utils/constants')
+let {check_authentication, check_authorization} = require('../utils/check_auth')
+
 /* GET users listing. */
 router.get('/', check_authentication,
-  check_authorization(constants.ADMIN_PERMISSION)
+  check_authorization(constants.MOD_PERMISSION)
 ,async function (req, res, next) {
   try {
     let users = await userController.GetAllUsers();
@@ -15,7 +16,7 @@ router.get('/', check_authentication,
     next(error)
   }
 });
-router.post('/',check_authentication, async function (req, res, next) {
+router.post('/',check_authentication, check_authentication, check_authorization(constants.ADMIN_PERMISSION),async function (req, res, next) {
   try {
     let body = req.body
     let user = await userController.CreateAnUser(
@@ -26,7 +27,7 @@ router.post('/',check_authentication, async function (req, res, next) {
     next(error)
   }
 });
-router.put('/:id', async function (req, res, next) {
+router.put('/:id', check_authentication, check_authorization(constants.ADMIN_PERMISSION),async function (req, res, next) {
   try {
     let body = req.body
     let user = await userController.UpdateAnUser(req.params.id, body)
@@ -35,7 +36,7 @@ router.put('/:id', async function (req, res, next) {
     next(error)
   }
 });
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id', check_authentication, check_authorization(constants.ADMIN_PERMISSION),async function (req, res, next) {
   try {
     let body = req.body
     let user = await userController.DeleteAnUser(req.params.id)

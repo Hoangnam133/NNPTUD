@@ -3,9 +3,8 @@ var router = express.Router();
 var userController = require('../controllers/users')
 let { CreateSuccessRes } = require('../utils/responseHandler');
 let jwt = require('jsonwebtoken')
-let constants = require('../utils/constants')
 let {check_authentication, check_authorization} = require('../utils/check_auth')
-
+let constants = require('../utils/constants')
 /* GET home page. */
 router.post('/login', async function (req, res, next) {
     try {
